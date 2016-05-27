@@ -1,9 +1,9 @@
-﻿var a = angular.module('BlankApp', ['ngTouch', 'ui.select', 'ngMaterial', 'ui.grid', 'ui.grid.pinning', 'ui.grid.cellNav', 'ui.grid.edit'])
+﻿var a = angular.module('BlankApp', ['ngCookies','ngTouch', 'ui.select', 'ngMaterial', 'ui.grid', 'ui.grid.pinning', 'ui.grid.cellNav', 'ui.grid.edit'])
  .controller('app', app)
  .controller('AppCtrl', AppCtrl)
   .directive('uiSelectWrap', uiSelectWrap)
-    .service('myService', function () {
-    var savedData = ''
+    .factory('myService', function () {
+        var savedData = {}
     function set(data) {
         savedData = data;
     }
@@ -18,13 +18,13 @@
 
     });
 
-a.controller('Dialog', function($scope, $mdDialog, $mdMedia, myService) {
+a.controller('Dialog', function($scope, $mdDialog, $mdMedia, myService, $cookies) {
     $scope.status = '  ';
     $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
     
 
     $scope.dodajCeche = function () {
-        myService.set("tttttd");
+        $cookies.put("k", "pleple");
 
     }
    
@@ -59,9 +59,9 @@ a.controller('Dialog', function($scope, $mdDialog, $mdMedia, myService) {
             clickOutsideToClose:false
         })
             .then(function(answer) {
-                $scope.status = 'You said the information was "' + answer + '".';
+                $scope.status = 'You said the information was "' + $cookies.get('k') + '".';
             }, function() {
-                $scope.status = 'You cancelled the dialog.';
+                $scope.status = $cookies.get('k');
             });
     };
 });
@@ -80,30 +80,39 @@ function DialogController($scope, $mdDialog) {
 
 
 
-a.controller('Spr', ['$scope', '$mdSidenav', 'myService', function ($scope, $mdSidenav, myService) {
+a.controller('Spr', ['$scope', '$mdSidenav', 'myService','$cookies', function ($scope, $mdSidenav, myService,$cookies) {
     //button//
     $scope.UAMUrl = 'http://amu.edu.pl';
     $scope.WMIUrl = 'http://wmi.amu.edu.pl';
     $scope.loginUrl = 'login.html';
     $scope.userUrl = 'user.html';
     $scope.arkuszUrl = 'arkusz.html';
-    $scope.arkUrl = 'material.html'
+    //$scope.arkUrl = 'material.html'
 
 
-  $scope.badanie = 
-  {
-      liczbaOperatorow: '',
-      liczbaCech: '',
-      liczbaProduktow: '',
-      liczbaPowtorzen: '',
-      tytul: '',
-      nazwaFirmy: '',
-      odpowiedzialny: '',
-      klient: '',
-      proces: '',
-      stanowisko: '',
-      nazwaCzesci: '',
-  }
+    $scope.badanie = 
+    {
+        liczbaOperatorow: '',
+        liczbaCech: '',
+        liczbaProduktow: '',
+        liczbaPowtorzen: '',
+        tytul: '',
+        nazwaFirmy: 'sadadsadsadasdasdddddddddd',
+        odpowiedzialny: '',
+        klient: '',
+        proces: '',
+        stanowisko: '',
+        nazwaCzesci: '',
+        nazwaElementu:''
+    }
+
+    
+    $scope.zlecBadanie = function () {
+        // myService.set($scope.badanie.nazwaFirmy);
+        $cookies.put("key", "dadasdasd");
+    }
+
+
     //layout//
     $scope.toggleSidenav = function (menuId) {
         $mdSidenav(menuId).toggle();
@@ -121,8 +130,8 @@ a.controller('Spr', ['$scope', '$mdSidenav', 'myService', function ($scope, $mdS
 }]);
 
 
-app.$inject = ['$scope', '$log', 'myService'];
-function app($scope, $log, myService) {
+app.$inject = ['$scope', '$log', 'myService', '$cookies'];
+function app($scope, $log, myService, $cookies) {
 
 
     var data1 = [{}];
@@ -158,7 +167,7 @@ function app($scope, $log, myService) {
         editableCellTemplate: 'uiSelect.html',
         editDropdownOptionsArray:[
         'bad',
-        'female'
+        'good'
         ]
     }
         ]
@@ -166,10 +175,7 @@ function app($scope, $log, myService) {
 
     };
 
-    $scope.fun = function () {
-        var x = myService.get() == '' ? 'x' : myService.get();
-        $scope.gridOptions.columnDefs.push({ name: x });
-    }
+    
     $scope.gridOptions.data = data1;
 }
 uiSelectWrap.$inject = ['$document', 'uiGridEditConstants'];
@@ -202,12 +208,15 @@ app.filter('mapTrait', function () {
 })
 
 
-AppCtrl.$inject = ['$scope', '$log', 'myService'];
-function AppCtrl($scope, $log, myService) {
+AppCtrl.$inject = ['$scope', '$log', 'myService', '$cookies'];
+function AppCtrl($scope, $log, myService, $cookies) {
+
+
+
     var tabs = [
           {
-              title: 'Rafał Moskowiak',
-              content: "Turbo Pen2000"
+              title:  'tastsa',
+              content: "sadasda"
           },
           { title: '2 Jan Kowalski', content: "Turbo Pen2000" },
     ],
@@ -229,6 +238,8 @@ function AppCtrl($scope, $log, myService) {
         var index = tabs.indexOf(tab);
         tabs.splice(index, 1);
     };
+
+
 
 }
 

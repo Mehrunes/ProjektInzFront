@@ -107,10 +107,13 @@
     <Content Include="login.html" />
     <Content Include="material.css" />
     <Content Include="material.html" />
+    <Content Include="scripts\angular-cookies.js" />
+    <Content Include="scripts\angular-cookies.min.js" />
     <Content Include="scripts\angular-ui\ui-bootstrap-tpls.js" />
     <Content Include="scripts\angular-ui\ui-bootstrap-tpls.min.js" />
     <Content Include="scripts\angular-ui\ui-bootstrap.js" />
     <Content Include="scripts\angular-ui\ui-bootstrap.min.js" />
+    <Content Include="scripts\angular-cookies.min.js.map" />
     <None Include="scripts\jquery-2.2.3-vsdoc.js" />
     <Content Include="scripts\jquery-2.2.3.js" />
     <Content Include="scripts\jquery-2.2.3.min.js" />
