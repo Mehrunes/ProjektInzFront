@@ -3,7 +3,7 @@
  .controller('AppCtrl', AppCtrl)
   .directive('uiSelectWrap', uiSelectWrap)
     .service('myService', function () {
-    var savedData = {}
+    var savedData = ''
     function set(data) {
         savedData = data;
     }
@@ -24,10 +24,10 @@ a.controller('Dialog', function($scope, $mdDialog, $mdMedia, myService) {
     
 
     $scope.dodajCeche = function () {
-        myService.set("dsadasdasdasd");
+        myService.set("tttttd");
 
     }
-    $scope.strings = myService.get()
+   
 
     $scope.showAdvanced = function(ev) {
         var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
@@ -161,15 +161,15 @@ function app($scope, $log, myService) {
         'female'
         ]
     }
-   ]
+        ]
 
 
     };
 
-  
-
-  
-
+    $scope.fun = function () {
+        var x = myService.get() == '' ? 'x' : myService.get();
+        $scope.gridOptions.columnDefs.push({ name: x });
+    }
     $scope.gridOptions.data = data1;
 }
 uiSelectWrap.$inject = ['$document', 'uiGridEditConstants'];

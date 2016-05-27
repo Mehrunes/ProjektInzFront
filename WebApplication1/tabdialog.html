@@ -1,7 +1,7 @@
 ﻿<md-dialog ng-controller="Dialog"  aria-label="Mango (Fruit)">
     <form>
         <md-toolbar>
-            <div class="md-toolbar-tools">
+            <div ng-controller="app" class="md-toolbar-tools">
                 <h2>Edit Mode</h2>
                
                 <md-button class="md-icon-button" ng-click="cancel()">
@@ -19,7 +19,7 @@
                 </md-tab>
                 <md-tab label="Cechy">
                     <md-content class="md-padding">
-                        <md-button class="md-primary md-raised" ng-click="dodajCeche()">
+                        <md-button class="md-primary md-raised" ng-click="dodajCeche(); fun()">
                            Add Operator
                         </md-button>
                     </md-content>
@@ -35,11 +35,11 @@
         <md-dialog-actions layout="row">
             
             <span flex></span>
-            <md-button ng-click="answer('not useful')">
-                Not Useful
+            <md-button ng-click="answer('Save')">
+                Save
             </md-button>
-            <md-button ng-click="answer('useful')" style="margin-right:20px;">
-                Useful
+            <md-button ng-click="answer('Cancel')" style="margin-right:20px;">
+                Cancel
             </md-button>
         </md-dialog-actions>
     </form>
