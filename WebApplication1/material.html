@@ -25,7 +25,7 @@
             <md-tabs md-dynamic-height md-selected="selectedIndex" md-border-bottom md-autoselect>
                 <md-tab ng-repeat="tab in tabs"
                         ng-disabled="tab.disabled"
-                        label="{{tab.title.x}}{{tab.title.y}}">
+                        label="{{tab.title}}">
                     <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
                         <div ng-bind="tab.content"></div>
                         <div ng-controller="app">

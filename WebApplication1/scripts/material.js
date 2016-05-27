@@ -143,12 +143,11 @@ function app($scope, $log, myService) {
        { name: 'id', type:'number',width: 100, pinnedLeft: true, enableCellEditOnFocus: false, enableColumnResizing: true },
        { name: 'name', width: 150, pinnedLeft: true, enableCellEditOnFocus: false, enableColumnResizing: true },
        {
-           name: 'Colour', enableColumnResizing: true, editableCellTemplate: 'ui-grid/dropdownEditor',
-           editDropdownValueLabel: 'trait1', editDropdownOptionsArray: [
-         { id: 'too Shiny', trait1: 'too Shiny' },
-         { id: 'too dull', trait1: 'too dull' },
-         { id: 'not even similar', trait1: 'not even similar' },
-         { id: 'Perfect', trait1: 'Perfect' }
+           name: 'Colour', enableColumnResizing: true, editableCellTemplate: 'uiSelect.html',
+                 editDropdownOptionsArray: [
+            'too shiny',
+            'too dull',
+            'perfect'
            ]
        },
     
@@ -207,8 +206,8 @@ AppCtrl.$inject = ['$scope', '$log', 'myService'];
 function AppCtrl($scope, $log, myService) {
     var tabs = [
           {
-              title: {x: 'Operator1', y: 'Rafał Moskowiak'},
-              content: "Turbo \rnPen2000"
+              title: 'Rafał Moskowiak',
+              content: "Turbo Pen2000"
           },
           { title: '2 Jan Kowalski', content: "Turbo Pen2000" },
     ],
