@@ -1,4 +1,4 @@
-﻿<md-dialog ng-controller="app" aria-label="Mango (Fruit)">
+﻿<md-dialog ng-controller="Dialog"  aria-label="Mango (Fruit)">
     <form>
         <md-toolbar>
             <div  class="md-toolbar-tools">
@@ -13,21 +13,21 @@
             <md-tabs md-dynamic-height md-border-bottom>
                 <md-tab label="Operatorzy">
                     <md-content class="md-padding">
-                        <h1 class="md-display-2">{{zmienna}}</h1>
+                        <h1 class="md-display-2">{{strings}}</h1>
                       
                     </md-content>
                 </md-tab>
                 <md-tab label="Cechy">
                     <md-content class="md-padding">
                         <md-button class="md-primary md-raised" ng-click="dodajCeche()">
-                           Add Trait
+                           Add Operator
                         </md-button>
                     </md-content>
                 </md-tab>
                 <md-tab label="Czesci">
                     <md-content class="md-padding">
                         <h1 class="md-display-2">Tab Three</h1>
-                   
+                      p>
                     </md-content>
                 </md-tab>
             </md-tabs>

@@ -1,74 +1,78 @@
-﻿var a = angular.module('BlankApp', ['ngTouch', 'ui.select', 'ngMaterial', 'ui.grid', 'ui.grid.pinning', 'ui.grid.cellNav', 'ui.grid.edit'])
+﻿var a = angular.module('BlankApp', ['ngCookies','ngTouch', 'ui.select', 'ngMaterial', 'ui.grid', 'ui.grid.pinning', 'ui.grid.cellNav', 'ui.grid.edit'])
  .controller('app', app)
  .controller('AppCtrl', AppCtrl)
   .directive('uiSelectWrap', uiSelectWrap)
     .factory('myService', function () {
         var savedData = {}
-        function set(data) {
-            savedData = data;
-        }
-        function get() {
-            return savedData;
-        }
+    function set(data) {
+        savedData = data;
+    }
+    function get() {
+        return savedData;
+    }
 
-        return {
-            set: set,
-            get: get
-        }
+    return {
+        set: set,
+        get: get
+    }
 
     });
 
-a.controller('Dialog', function ($scope, $mdDialog, $mdMedia, myService, $rootScope) {
+a.controller('Dialog', function($scope, $mdDialog, $mdMedia, myService, $cookies) {
     $scope.status = '  ';
     $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
-
+    
 
     $scope.dodajCeche = function () {
-        $rootScope.test = "no nie wiem";
+        $cookies.put("k", "pleple");
 
     }
+   
 
-
-    $scope.showAdvanced = function (ev) {
-        var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+    $scope.showAdvanced = function(ev) {
+        var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
         $mdDialog.show({
             controller: DialogController,
             templateUrl: 'dialog1.tmpl.html',
             parent: angular.element(document.body),
             targetEvent: ev,
-            clickOutsideToClose: true,
+            clickOutsideToClose:true,
             fullscreen: useFullScreen
         })
-        .then(function (answer) {
+        .then(function(answer) {
             $scope.status = 'You said the information was "' + answer + '".';
-        }, function () {
+        }, function() {
             $scope.status = 'You cancelled the dialog.';
         });
-        $scope.$watch(function () {
+        $scope.$watch(function() {
             return $mdMedia('xs') || $mdMedia('sm');
-        }, function (wantsFullScreen) {
+        }, function(wantsFullScreen) {
             $scope.customFullscreen = (wantsFullScreen === true);
         });
     };
-    $scope.showTabDialog = function (ev) {
+    $scope.showTabDialog = function(ev) {
         $mdDialog.show({
             controller: DialogController,
             templateUrl: 'tabDialog.html',
             parent: angular.element(document.body),
             targetEvent: ev,
-            clickOutsideToClose: false
+            clickOutsideToClose:false
         })
-
+            .then(function(answer) {
+                $scope.status = 'You said the information was "' + $cookies.get('k') + '".';
+            }, function() {
+                $scope.status = $cookies.get('k');
+            });
     };
 });
 function DialogController($scope, $mdDialog) {
-    $scope.hide = function () {
+    $scope.hide = function() {
         $mdDialog.hide();
     };
-    $scope.cancel = function () {
+    $scope.cancel = function() {
         $mdDialog.cancel();
     };
-    $scope.answer = function (answer) {
+    $scope.answer = function(answer) {
         $mdDialog.hide(answer);
     };
 }
@@ -76,36 +80,36 @@ function DialogController($scope, $mdDialog) {
 
 
 
-a.controller('Spr', ['$scope', '$mdSidenav', 'myService', '$rootScope', function ($scope, $mdSidenav, myService, $rootScope) {
+a.controller('Spr', ['$scope', '$mdSidenav', 'myService','$cookies', function ($scope, $mdSidenav, myService,$cookies) {
     //button//
     $scope.UAMUrl = 'http://amu.edu.pl';
     $scope.WMIUrl = 'http://wmi.amu.edu.pl';
     $scope.loginUrl = 'login.html';
     $scope.userUrl = 'user.html';
     $scope.arkuszUrl = 'arkusz.html';
-    $scope.arkUrl = 'material.html'
+    //$scope.arkUrl = 'material.html'
 
 
-    $scope.badanie =
+    $scope.badanie = 
     {
         liczbaOperatorow: '',
         liczbaCech: '',
         liczbaProduktow: '',
         liczbaPowtorzen: '',
         tytul: '',
-        nazwaFirmy: '',
+        nazwaFirmy: 'sadadsadsadasdasdddddddddd',
         odpowiedzialny: '',
         klient: '',
         proces: '',
         stanowisko: '',
         nazwaCzesci: '',
-        nazwaElementu: ''
+        nazwaElementu:''
     }
 
-
+    
     $scope.zlecBadanie = function () {
-        $rootScope.test = badanie.nazwaFirmy;
-
+        // myService.set($scope.badanie.nazwaFirmy);
+        $cookies.put("key", "dadasdasd");
     }
 
 
@@ -126,55 +130,42 @@ a.controller('Spr', ['$scope', '$mdSidenav', 'myService', '$rootScope', function
 }]);
 
 
-app.$inject = ['$scope', '$log', '$http'];
-function app($scope, $log, $http) {
-
-    $scope.hello = {};
-    $scope.sendPost = function() {
-        var data = $.param({
-            json: JSON.stringify({
-                data: $scope.data1
-            })
-        });
-        $http.post("/echo/json/", data).success(function(data, status) {
-            $scope.hello = data;
-        })
-    }                   
+app.$inject = ['$scope', '$log', 'myService', '$cookies'];
+function app($scope, $log, myService, $cookies) {
 
 
-    $scope.zmienna = "wartoscZmiennej";
     var data1 = [{}];
 
-    for (var i = 0; i < 50; i++) {
+    for (var i = 1; i <= 50; i++) {
         if (i % 2) {
-            data1[i] = { "id": "" + (i+1), "name": "PenX" + "ballPoint" }
+            data1[i] = { "id": "" + i, "name": "PenX" + "ballPoint" }
         }
         else {
-            data1[i] = { "id": "" + (i+1), "name": "PenX" + "Sharp" }
+            data1[i] = { "id": "" + i, "name": "PenX" + "Sharp" }
         }
 
     }
 
-
+  
     $scope.gridOptions = {
         columnDefs: [
-       { name: 'id', type: 'number', width: 100, pinnedLeft: true, enableCellEditOnFocus: false, enableColumnResizing: true },
+       { name: 'id', type:'number',width: 100, pinnedLeft: true, enableCellEditOnFocus: false, enableColumnResizing: true },
        { name: 'name', width: 150, pinnedLeft: true, enableCellEditOnFocus: false, enableColumnResizing: true },
        {
            name: 'Colour', enableColumnResizing: true, editableCellTemplate: 'uiSelect.html',
-           editDropdownOptionsArray: [
-      'too shiny',
-      'too dull',
-      'perfect'
+                 editDropdownOptionsArray: [
+            'too shiny',
+            'too dull',
+            'perfect'
            ]
        },
-
+    
     {
         name: 'Verdict',
         width: 400,
         pinnedRight: true,
         editableCellTemplate: 'uiSelect.html',
-        editDropdownOptionsArray: [
+        editDropdownOptionsArray:[
         'bad',
         'good'
         ]
@@ -184,30 +175,7 @@ function app($scope, $log, $http) {
 
     };
 
-
-    $scope.addColumn = function (n, opcja1, opcja2) {
-        $scope.gridOptions.columnDefs.push(
-            {
-                name: n,
-                enableColumnResizing: true,
-                editableCellTemplate: 'uiSelect.html',
-                editDropdownOptionsArray: [
-                opcja1,
-                opcja2
-                ]
-
-
-            })
-
-    }
-
-    $scope.iter = 0;
-
-    $scope.removeRow = function (id) {
-        $scope.gridOptions.data.splice((id - 1 -$scope.iter), 1);
-        $scope.iter = $scope.iter + 1;
-    }
-
+    
     $scope.gridOptions.data = data1;
 }
 uiSelectWrap.$inject = ['$document', 'uiGridEditConstants'];
@@ -240,16 +208,15 @@ app.filter('mapTrait', function () {
 })
 
 
-
-AppCtrl.$inject = ['$scope', '$log', 'myService'];
-function AppCtrl($scope, $log, myService) {
+AppCtrl.$inject = ['$scope', '$log', 'myService', '$cookies'];
+function AppCtrl($scope, $log, myService, $cookies) {
 
 
 
     var tabs = [
           {
-              title: '1 Rafał Maskowski',
-              content: "Turbo Pen2000"
+              title:  'tastsa',
+              content: "sadasda"
           },
           { title: '2 Jan Kowalski', content: "Turbo Pen2000" },
     ],
