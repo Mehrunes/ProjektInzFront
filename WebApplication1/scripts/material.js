@@ -1,34 +1,67 @@
-﻿var a = angular.module('BlankApp', ['ngTouch', 'ui.select', 'ngMaterial', 'ui.grid', 'ui.grid.pinning', 'ui.grid.cellNav', 'ui.grid.edit'])
+﻿var a = angular.module('BlankApp', ['ngRoute','ngTouch', 'ui.select', 'ngMaterial', 'ui.grid', 'ui.grid.pinning', 'ui.grid.cellNav', 'ui.grid.edit'])
  .controller('app', app)
  .controller('AppCtrl', AppCtrl)
   .directive('uiSelectWrap', uiSelectWrap)
     .factory('myService', function () {
-        var savedData = {}
+        var SaveData = {}
+     
         function set(data) {
-            savedData = data;
+            SaveData = data;
         }
         function get() {
-            return savedData;
+            return SaveData;
         }
 
         return {
-            set: set,
-            get: get
+            set : set,
+            get : get
         }
 
-    });
+    })
+.config(['$routeProvider', function ($routeProvider) {
+    $routeProvider
+        .when('/', {
+            templateUrl: 'start.html',
+            controller: 'Spr'
+        })
+      .when('/arkusz', {
+          templateUrl: 'arkusz.html',
+          controller: 'Spr'
+      })
+      .when('/login', {
+          templateUrl: 'login.html',
+          controller: 'Spr'
+      })
+         .when('/material', {
+             templateUrl: 'material.html',
+             controller: 'app'
+         })
+      .when('/user', {
+          templateUrl: 'user.html',
+          controller: 'Spr'
+      })
+     .when('/registration', {
+         templateUrl: 'register.html',
+         controller: 'Spr'
+     })
+    
+    
 
-a.controller('Dialog', function ($scope, $mdDialog, $mdMedia, myService, $rootScope) {
+       
+}])
+
+
+a.controller('Dialog', function ($scope, $mdDialog, $mdMedia, myService) {
     $scope.status = '  ';
     $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
 
 
     $scope.dodajCeche = function () {
-        $rootScope.test = "no nie wiem";
+       
 
     }
 
-
+    
     $scope.showAdvanced = function (ev) {
         var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
         $mdDialog.show({
@@ -50,6 +83,7 @@ a.controller('Dialog', function ($scope, $mdDialog, $mdMedia, myService, $rootSc
             $scope.customFullscreen = (wantsFullScreen === true);
         });
     };
+    
     $scope.showTabDialog = function (ev) {
         $mdDialog.show({
             controller: DialogController,
@@ -76,37 +110,23 @@ function DialogController($scope, $mdDialog) {
 
 
 
-a.controller('Spr', ['$scope', '$mdSidenav', 'myService', '$rootScope', function ($scope, $mdSidenav, myService, $rootScope) {
+a.controller('Spr', ['$scope', '$mdSidenav', 'myService' , function ($scope, $mdSidenav, myService) {
     //button//
     $scope.UAMUrl = 'http://amu.edu.pl';
     $scope.WMIUrl = 'http://wmi.amu.edu.pl';
-    $scope.loginUrl = 'login.html';
-    $scope.userUrl = 'user.html';
-    $scope.arkuszUrl = 'arkusz.html';
-    $scope.arkUrl = 'material.html'
+    $scope.loginUrl = '#login';
+    $scope.userUrl = '#user';
+    $scope.arkuszUrl = '#arkusz';
+    $scope.arkUrl = '#material';
+    $scope.registryUrl = '#register';
 
-
-    $scope.badanie =
-    {
-        liczbaOperatorow: '',
-        liczbaCech: '',
-        liczbaProduktow: '',
-        liczbaPowtorzen: '',
-        tytul: '',
-        nazwaFirmy: '',
-        odpowiedzialny: '',
-        klient: '',
-        proces: '',
-        stanowisko: '',
-        nazwaCzesci: '',
-        nazwaElementu: ''
-    }
+    
+   $scope.badanie ={}
 
 
     $scope.zlecBadanie = function () {
-        $rootScope.test = badanie.nazwaFirmy;
-
-    }
+  myService.set($scope.badanie);
+      };
 
 
     //layout//
@@ -126,8 +146,8 @@ a.controller('Spr', ['$scope', '$mdSidenav', 'myService', '$rootScope', function
 }]);
 
 
-app.$inject = ['$scope', '$log', '$http'];
-function app($scope, $log, $http) {
+app.$inject = ['$scope', '$log', '$http', 'myService'];
+function app($scope, $log, $http, myService) {
 
     $scope.hello = {};
     $scope.sendPost = function() {
@@ -141,11 +161,13 @@ function app($scope, $log, $http) {
         })
     }                   
 
-
+    $scope.operatorzy = ['sads', 'wwwww', 'eeee'];
     $scope.zmienna = "wartoscZmiennej";
     var data1 = [{}];
-
-    for (var i = 0; i < 50; i++) {
+    var data2 = [{}];
+    
+    var x = myService.get().liczbaCech;
+    for (var i = 0; i < x; i++) {
         if (i % 2) {
             data1[i] = { "id": "" + (i+1), "name": "PenX" + "ballPoint" }
         }
@@ -155,10 +177,9 @@ function app($scope, $log, $http) {
 
     }
 
-
     $scope.gridOptions = {
         columnDefs: [
-       { name: 'id', type: 'number', width: 100, pinnedLeft: true, enableCellEditOnFocus: false, enableColumnResizing: true },
+       { name: 'id', type: 'number', width: 100, pinnedLeft: true,enableCellEditOnFocus: false, enableColumnResizing: true },
        { name: 'name', width: 150, pinnedLeft: true, enableCellEditOnFocus: false, enableColumnResizing: true },
        {
            name: 'Colour', enableColumnResizing: true, editableCellTemplate: 'uiSelect.html',
@@ -203,9 +224,24 @@ function app($scope, $log, $http) {
 
     $scope.iter = 0;
 
+    //$scope.gridOptions.columnDefs.push(myService.get());
+
+    $scope.odbierzBadanie = function() {
+        $scope.gridOptions.columnDefs.push({ name : "odebralem"})
+    }
+
     $scope.removeRow = function (id) {
         $scope.gridOptions.data.splice((id - 1 -$scope.iter), 1);
         $scope.iter = $scope.iter + 1;
+    }
+
+    $scope.swapData = function (index) {
+        if (index % 2 === 0) {
+            $scope.gridOptions.data = data2
+        } else {
+            $scope.gridOptions.data = data1
+        }
+        $scope.iter=$scope.iter+1;
     }
 
     $scope.gridOptions.data = data1;
@@ -249,9 +285,12 @@ function AppCtrl($scope, $log, myService) {
     var tabs = [
           {
               title: '1 Rafał Maskowski',
-              content: "Turbo Pen2000"
+              hasContent : false
           },
-          { title: '2 Jan Kowalski', content: "Turbo Pen2000" },
+          {
+              title: '2 Jan Kowalski',
+              hasContent: false
+          }
     ],
         selected = null,
         previous = null;
