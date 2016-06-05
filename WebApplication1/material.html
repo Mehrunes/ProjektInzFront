@@ -24,17 +24,12 @@
 </head>
 <body ng-app="BlankApp" ng-controller="app" ng-cloak>
     <div ng-controller="AppCtrl" class="sample" layout="column" ng-cloak>
-      
-        <md-tabs md-dynamic-height md-selected="selectedIndex" md-border-bottom md-autoselect>
-            <md-tab ng-repeat="tab in tabs"
-                    md-on-select="swapData()"
-                    ng-disabled="tab.disabled">
-                <md-tab-label>="{{tab.title}}"</md-tab-label>
-                <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
-                </div>
-            </md-tab>
-        </md-tabs>
- 
+
+
+        <div class="md-toolbar-tools">
+            Nazwa Części&nbsp&nbsp &nbsp  Tytuł&nbsp &nbsp &nbsp
+            &nbsp &nbsp &nbsp Nazwa Firmy &nbsp &nbsp &nbsp klient  &nbsp &nbsp &nbsp proces&nbsp &nbsp &nbsp  stanowisko <br>
+        </div>
         <div ng-controller="app">
             <md-toolbar>
                 <h3>

@@ -4,7 +4,7 @@
   .directive('uiSelectWrap', uiSelectWrap)
     .factory('myService', function () {
         var SaveData = {}
-     
+
         function set(data) {
             SaveData = data;
         }
@@ -14,10 +14,26 @@
 
         return {
             set : set,
-            get : get
+            get: get
         }
 
     })
+     .factory('spreadSheetDataFactory', function () {
+         var SaveData = {}
+
+         function set(data) {
+             SaveData = data;
+         }
+         function get() {
+             return SaveData;
+         }
+
+         return {
+             set: set,
+             get: get
+         }
+
+     })
 .config(['$routeProvider', function ($routeProvider) {
     $routeProvider
         .when('/', {
@@ -44,11 +60,52 @@
          templateUrl: 'register.html',
          controller: 'Spr'
      })
-    
+     .when('/traits', {
+         templateUrl: 'traits.html',
+         controller: 'traitsController'
+     })
     
 
        
 }])
+
+
+
+
+a.controller('traitsController', ['$scope', 'spreadSheetDataFactory', function ($scope, spreadSheetDataFactory) {
+   
+
+    $scope.spreadSheetDataFactory = spreadSheetDataFactory;
+     var data = [];
+     $scope.cechy = [];
+     $scope.operatorzy = ['xD'];
+     $scope.przedmioty = [];
+
+    $scope.temporaryTraits = data;
+
+    
+    $scope.dodajCeche = function (cecha) {
+        $scope.temporaryTraits.push(cecha);
+        $scope.cechy.push(cecha);
+    }
+
+    $scope.dodajPrzedmiot = function (przedmiot) {
+        $scope.przedmioty.push(przedmiot);
+    }
+    $scope.dodajOperatora = function (operator) {
+        $scope.operatorzy.push(operator);
+    }
+
+    $scope.dalej = function () {
+        spreadSheetDataFactory.set(
+            {
+                operatorzy: $scope.operatorzy,
+                przedmioty: $scope.przedmioty,
+                cechy: $scope.cechy
+            });
+    }
+
+}]);
 
 
 a.controller('Dialog', function ($scope, $mdDialog, $mdMedia, myService) {
@@ -109,7 +166,6 @@ function DialogController($scope, $mdDialog) {
 
 
 
-
 a.controller('Spr', ['$scope', '$mdSidenav', 'myService' , function ($scope, $mdSidenav, myService) {
     //button//
     $scope.UAMUrl = 'http://amu.edu.pl';
@@ -119,9 +175,14 @@ a.controller('Spr', ['$scope', '$mdSidenav', 'myService' , function ($scope, $md
     $scope.arkuszUrl = '#arkusz';
     $scope.arkUrl = '#material';
     $scope.registryUrl = '#register';
-
+    $scope.smod = '#smod';
     
-   $scope.badanie ={}
+    $scope.badanie =
+        {
+
+
+
+        }
 
 
     $scope.zlecBadanie = function () {
@@ -146,105 +207,136 @@ a.controller('Spr', ['$scope', '$mdSidenav', 'myService' , function ($scope, $md
 }]);
 
 
-app.$inject = ['$scope', '$log', '$http', 'myService'];
-function app($scope, $log, $http, myService) {
 
-    $scope.hello = {};
-    $scope.sendPost = function() {
-        var data = $.param({
-            json: JSON.stringify({
-                data: $scope.data1
-            })
-        });
-        $http.post("/echo/json/", data).success(function(data, status) {
-            $scope.hello = data;
-        })
-    }                   
 
-    $scope.operatorzy = ['sads', 'wwwww', 'eeee'];
-    $scope.zmienna = "wartoscZmiennej";
-    var data1 = [{}];
-    var data2 = [{}];
-    
-    var x = myService.get().liczbaCech;
-    for (var i = 0; i < x; i++) {
-        if (i % 2) {
-            data1[i] = { "id": "" + (i+1), "name": "PenX" + "ballPoint" }
+
+app.$inject = ['$scope', '$log', '$http', 'myService', 'spreadSheetDataFactory'];
+function app($scope, $log, $http, myService, spreadSheetDataFactory) {
+
+
+    var spreadSheetData = spreadSheetDataFactory.get();
+
+    //  $scope.label = 'tytuł: ' + myService.get().tytul + 'nazwaFirmy: ' + myService.get().nazwaFirmy +
+    // 'klient: ' + myService.get().klient + 'proces: ' + myService.get().proces + 'stanowisko: ' + myService.get().stanowisko +
+    //   ' nazwaCzesci: ' + myService.get().nazwaCzesci;
+
+
+
+
+        $scope.operatorzy = spreadSheetData.operatorzy;
+        $scope.zmienna = "wartoscZmiennej";
+        var data1 = [{}];
+        var data2 = [{}];
+
+       
+        for (var i = 0; i < 30; i++) {
+            if (i % 2) {
+                data1[i] = { "id": "" + (i + 1), "name": "PenX" + "ballPoint" }
+            }
+            else {
+                data1[i] = { "id": "" + (i + 1), "name": "PenX" + "Sharp" }
+            }
+
         }
-        else {
-            data1[i] = { "id": "" + (i+1), "name": "PenX" + "Sharp" }
+
+       
+        for (var i = 0; i < 50; i++) {
+            if (i % 2) {
+                data2[i] = { "id": "" + (i + 1), "name": "rrrr" + "ballPoint" }
+            }
+            else {
+                data2[i] = { "id": "" + (i + 1), "name": "PaaaenX" + "Sharp" }
+            }
+
         }
 
-    }
 
-    $scope.gridOptions = {
-        columnDefs: [
-       { name: 'id', type: 'number', width: 100, pinnedLeft: true,enableCellEditOnFocus: false, enableColumnResizing: true },
-       { name: 'name', width: 150, pinnedLeft: true, enableCellEditOnFocus: false, enableColumnResizing: true },
-       {
-           name: 'Colour', enableColumnResizing: true, editableCellTemplate: 'uiSelect.html',
-           editDropdownOptionsArray: [
-      'too shiny',
-      'too dull',
-      'perfect'
-           ]
-       },
+        var cechy = [];
 
-    {
-        name: 'Verdict',
-        width: 400,
-        pinnedRight: true,
-        editableCellTemplate: 'uiSelect.html',
-        editDropdownOptionsArray: [
-        'bad',
-        'good'
-        ]
-    }
-        ]
-
-
-    };
-
-
-    $scope.addColumn = function (n, opcja1, opcja2) {
-        $scope.gridOptions.columnDefs.push(
-            {
-                name: n,
-                enableColumnResizing: true,
-                editableCellTemplate: 'uiSelect.html',
+        for (var i = 0; i < spreadSheetData.cechy.length ; i++) {
+            cechy.push({
+                name: spreadSheetData.cechy[i],
+                enableColumnResizing: true, editableCellTemplate: 'uiSelect.html',
                 editDropdownOptionsArray: [
-                opcja1,
-                opcja2
+           'too shiny',
+           'too dull',
+           'perfect'
                 ]
 
-
-            })
-
-    }
-
-    $scope.iter = 0;
-
-    //$scope.gridOptions.columnDefs.push(myService.get());
-
-    $scope.odbierzBadanie = function() {
-        $scope.gridOptions.columnDefs.push({ name : "odebralem"})
-    }
-
-    $scope.removeRow = function (id) {
-        $scope.gridOptions.data.splice((id - 1 -$scope.iter), 1);
-        $scope.iter = $scope.iter + 1;
-    }
-
-    $scope.swapData = function (index) {
-        if (index % 2 === 0) {
-            $scope.gridOptions.data = data2
-        } else {
-            $scope.gridOptions.data = data1
+            } );
         }
-        $scope.iter=$scope.iter+1;
-    }
 
-    $scope.gridOptions.data = data1;
+
+        $scope.gridOptions = {
+            columnDefs: [
+           { name: 'id', type: 'number', width: 100, pinnedLeft: true, enableCellEditOnFocus: false, enableColumnResizing: true },
+           { name: 'name', width: 150, pinnedLeft: true, enableCellEditOnFocus: false, enableColumnResizing: true },
+           {
+               name: 'Colour', enableColumnResizing: true, editableCellTemplate: 'uiSelect.html',
+               editDropdownOptionsArray: [
+          'too shiny',
+          'too dull',
+          'perfect'
+               ]
+           },
+
+        {
+            name: 'Verdict',
+            width: 400,
+            pinnedRight: true,
+            editableCellTemplate: 'uiSelect.html',
+            editDropdownOptionsArray: [
+            'bad',
+            'good'
+            ]
+        }
+            ].concat(cechy)
+
+
+        };
+
+
+        $scope.addColumn = function (n, opcja1, opcja2) {
+            $scope.gridOptions.columnDefs.push(
+                {
+                    name: n,
+                    enableColumnResizing: true,
+                    editableCellTemplate: 'uiSelect.html',
+                    editDropdownOptionsArray: [
+                    opcja1,
+                    opcja2
+                    ]
+
+
+                })
+
+        }
+
+        $scope.dane = {};
+
+        $scope.iter = 0;
+
+        //$scope.gridOptions.columnDefs.push(myService.get());
+
+
+     
+
+        $scope.removeRow = function (id) {
+            $scope.gridOptions.data.splice((id - 1 - $scope.iter), 1);
+            $scope.iter = $scope.iter + 1;
+        }
+
+        $scope.swapData = function (index) {
+            if (index % 2 === 0) {
+                $scope.gridOptions.data = data2
+            } else {
+                $scope.gridOptions.data = data1
+            }
+            $scope.iter = $scope.iter + 1;
+        }
+
+        $scope.gridOptions.data = data1;
+    
 }
 uiSelectWrap.$inject = ['$document', 'uiGridEditConstants'];
 function uiSelectWrap($document, uiGridEditConstants) {
